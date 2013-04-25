@@ -1,0 +1,35 @@
+3260,Calcagno
+3490,Zabalza
+3740,Heller
+4550,Garramuño
+4730,Metaza
+5060,Solanas (F.E.)
+5420,Ferreyra
+5700,Ciampini
+6330,Ianni
+6440,Bernal
+7060,Pietragalla Corti
+7430,Ferrá de Bartol
+8170,Oporto
+8850,Camaño
+9220,de Petri
+11690,Kunkel
+11800,Pansa
+12030,Cortina
+12500,Rogel
+12640,Solanas (F.E.)
+12750,Recalde
+13140,Giubergia
+13920,Ciciliani
+14540,Obiglio
+14590,Pérez
+14890,Fortuna
+15050,Comelli
+15240,Argumedo
+15300,Regazzoli
+15340,Fadul
+16340,Riestra
+16750,Mouillerón
+17160,Ruiz
+17340,Garramuño
+17370,Metaza

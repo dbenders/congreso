@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Date:</b>
+  <%= @session.date %>
+</p>
+
+<p>
+  <b>Chamber:</b>
+  <%= @session.chamber %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @session.name %>
+</p>
+
+<p>
+  <b>Transcript:</b>
+  <%= @session.transcript %>
+</p>
+
+<p>
+  <b>Video url:</b>
+  <%= @session.video_url %>
+</p>
+
+
+<%= link_to 'Edit', edit_session_path(@session) %> |
+<%= link_to 'Back', sessions_path %>

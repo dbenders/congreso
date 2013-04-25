@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Firstname:</b>
+  <%= @person.firstname %>
+</p>
+
+<p>
+  <b>Lastname:</b>
+  <%= @person.lastname %>
+</p>
+
+<p>
+  <b>Photo small:</b>
+  <%= @person.photo_small %>
+</p>
+
+<p>
+  <b>Photo medium:</b>
+  <%= @person.photo_medium %>
+</p>
+
+<p>
+  <b>Wikipedia:</b>
+  <%= @person.wikipedia %>
+</p>
+
+<p>
+  <b>Facebook:</b>
+  <%= @person.facebook %>
+</p>
+
+<p>
+  <b>Twitter:</b>
+  <%= @person.twitter %>
+</p>
+
+<p>
+  <b>Website:</b>
+  <%= @person.website %>
+</p>
+
+
+<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Back', people_path %>

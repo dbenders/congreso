@@ -1,4 +1,6 @@
 Congreso::Application.routes.draw do
+  resources :bookmark_sets
+
   resources :bookmarks
 
   resources :video_bookmarks

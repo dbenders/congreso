@@ -16,8 +16,16 @@
 </p>
 
 <p>
-  <b>Transcript:</b>
-  <%= @session.transcript %>
+  <b>Segments:</b>
+  <ul>
+    <% @session.transcript_segments.each do |segm| %>
+      <% if segm[:type] == :section %>
+        <li><%= segm[:name] %></li>
+      <% elsif segm[:type] == :speech %>
+        <li><%= segm[:speaker] %></li>
+      <% end %>
+    <% end %>
+  </ul>
 </p>
 
 <p>

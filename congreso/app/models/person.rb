@@ -8,12 +8,14 @@ class Person < ActiveRecord::Base
   	"#{lastname}, #{firstname}"
   end
 
+  def match(name)
+    lastname == name
+  end
+
   def self.find_by_short_name(short_name)
   	if not short_name.include?('(')
-  		puts short_name.strip.titleize
 	  	Person.find_by_lastname(short_name.strip.titleize)
 	  else
-	  	require 'debugger'; debugger
 	  	lastname,p = short_name.split('(')
 	  	initials = p.scan(/(.)\./).collect {|x| x[0]} 
 	  	candidates = Person.find_all_by_lastname(lastname.strip.titleize)

@@ -11,16 +11,29 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130424205818) do
+ActiveRecord::Schema.define(:version => 20130425155400) do
+
+  create_table "bookmark_sets", :force => true do |t|
+    t.string   "typ"
+    t.string   "name"
+    t.integer  "session_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "bookmarks", :force => true do |t|
     t.string   "type"
     t.integer  "pos"
     t.integer  "session_id"
     t.integer  "person_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "typ"
+    t.integer  "textpos"
+    t.integer  "testlength"
+    t.integer  "length"
+    t.integer  "bookmark_set_id"
+    t.integer  "textlength"
   end
 
   create_table "parties", :force => true do |t|

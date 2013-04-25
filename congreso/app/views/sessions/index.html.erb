@@ -17,7 +17,14 @@
     <td><%= session.date %></td>
     <td><%= session.chamber %></td>
     <td><%= session.name %></td>
-    <td><%= session.transcript %></td>
+    <td>
+        <ul>
+            <% session.transcript_segments.each do |segm| %>
+                    <li><%= segm %></li>
+            <% end %>
+        </ul>
+    </td>
+    <!-- <td><%= session.transcript %></td> -->
     <td><%= session.video_url %></td>
     <td><%= link_to 'Show', session %></td>
     <td><%= link_to 'Edit', edit_session_path(session) %></td>

@@ -2,9 +2,10 @@
 
 <table>
   <tr>
+    <th>Session</th>    
     <th>Type</th>
     <th>Pos</th>
-    <th>Session</th>
+    <th>Transcript pos</th>
     <th>Person</th>
     <th></th>
     <th></th>
@@ -13,10 +14,11 @@
 
 <% @bookmarks.each do |bookmark| %>
   <tr>
-    <td><%= bookmark.type %></td>
-    <td><%= bookmark.pos %></td>
-    <td><%= bookmark.session_id %></td>
-    <td><%= bookmark.person_id %></td>
+    <td><%= bookmark.bookmark_set_id %></td>    
+    <td><%= bookmark.typ %></td>
+    <td><%= "#{bookmark.pos} - #{(bookmark.length)? bookmark.pos+bookmark.length : ''}" %></td>
+    <td><%= "#{bookmark.textpos} - #{(bookmark.textlength)? bookmark.textpos+bookmark.textlength : ''}" %></td>    
+    <td><%= link_to(bookmark.person,edit_person_path(bookmark.person)) if bookmark.person %></td>
     <td><%= link_to 'Show', bookmark %></td>
     <td><%= link_to 'Edit', edit_bookmark_path(bookmark) %></td>
     <td><%= link_to 'Destroy', bookmark, method: :delete, data: { confirm: 'Are you sure?' } %></td>

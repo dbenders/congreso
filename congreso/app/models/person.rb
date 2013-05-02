@@ -4,8 +4,12 @@ class Person < ActiveRecord::Base
   belongs_to :party
   has_many :bookmarks
 
-  def to_s
+  def fullname
   	"#{lastname}, #{firstname}"
+  end
+
+  def to_s
+  	fullname
   end
 
   def match(name)

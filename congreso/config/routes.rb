@@ -1,17 +1,41 @@
 Congreso::Application.routes.draw do
-  resources :bookmark_sets
 
-  resources :bookmarks
+  resources :chambers
+
+  resources :bookmark_sets
 
   resources :video_bookmarks
 
-  resources :sessions
+  resources :sessions do
+    resources :text_bookmarks do
+      get 'rebuild', :on => :collection
+      get 'up'
+      get 'down'
+      get 'transcript'      
+      get 'merge_up'
+    end
+    resources :bookmarks do
+      get 'match', :on => :collection
+      get 'toggle_matchtyp'
+    end   
+  end
 
   resources :provinces
 
   resources :parties
 
-  resources :people
+  resources :people do
+    get 'card'
+  end
+
+  root :to => 'chambers#index'
+
+  match ':name' => 'chambers#show', :as => :pretty_chamber
+  match ':chamber_name/:period/:meeting' => 'sessions#show', :as => :pretty_session
+
+
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

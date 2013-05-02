@@ -2,8 +2,7 @@ class PartiesController < ApplicationController
   # GET /parties
   # GET /parties.json
   def index
-    @parties = Party.all
-
+    @parties = Party.all.sort_by { |p| p.name.downcase }
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @parties }

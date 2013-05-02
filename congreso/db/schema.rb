@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130425155400) do
+ActiveRecord::Schema.define(:version => 20130502133215) do
 
   create_table "bookmark_sets", :force => true do |t|
     t.string   "typ"
@@ -26,14 +26,27 @@ ActiveRecord::Schema.define(:version => 20130425155400) do
     t.integer  "pos"
     t.integer  "session_id"
     t.integer  "person_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.string   "typ"
     t.integer  "textpos"
     t.integer  "testlength"
     t.integer  "length"
     t.integer  "bookmark_set_id"
     t.integer  "textlength"
+    t.string   "title"
+    t.float    "score"
+    t.integer  "text_bookmark_id"
+    t.string   "matchtyp"
+  end
+
+  create_table "chambers", :force => true do |t|
+    t.string   "name"
+    t.string   "photo_medium"
+    t.string   "photo_small"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.boolean  "disabled"
   end
 
   create_table "parties", :force => true do |t|
@@ -77,6 +90,22 @@ ActiveRecord::Schema.define(:version => 20130425155400) do
     t.string   "video_url"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "length"
+    t.integer  "chamber_id"
+    t.integer  "meeting"
+    t.integer  "period"
+  end
+
+  create_table "text_bookmarks", :force => true do |t|
+    t.integer  "pos"
+    t.integer  "length"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "person_id"
+    t.integer  "session_id"
+    t.string   "typ"
+    t.string   "title"
+    t.integer  "bookmark_id"
   end
 
   create_table "video_bookmarks", :force => true do |t|

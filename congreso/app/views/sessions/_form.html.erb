@@ -16,13 +16,21 @@
     <%= f.date_select :date %>
   </div>
   <div class="field">
-    <%= f.label :chamber %><br />
-    <%= f.text_field :chamber %>
+    <%= f.label :chamber_id %><br />
+    <%= f.select(:chamber_id, Chamber.all.collect { |ch| [ch.name,ch.id]}) %>
   </div>
   <div class="field">
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  <div class="field">
+    <%= f.label :meeting %><br />
+    <%= f.text_field :meeting %>
+  </div>
+  <div class="field">
+    <%= f.label :period %><br />
+    <%= f.text_field :period %>
+  </div>  
   <div class="field">
     <%= f.label :transcript %><br />
     <%= f.text_area :transcript %>
@@ -31,6 +39,12 @@
     <%= f.label :video_url %><br />
     <%= f.text_field :video_url %>
   </div>
+
+  <div class="field">
+    <%= f.label :length %><br />
+    <%= f.text_field :length %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

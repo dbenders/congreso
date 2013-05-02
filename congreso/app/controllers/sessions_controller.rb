@@ -1,4 +1,7 @@
+include ApplicationHelper
+
 class SessionsController < ApplicationController
+
   # GET /sessions
   # GET /sessions.json
   def index
@@ -13,11 +16,72 @@ class SessionsController < ApplicationController
   # GET /sessions/1
   # GET /sessions/1.json
   def show
-    @session = Session.find(params[:id])
-
+    if params[:period] and params[:meeting]
+      @session = Session.find_by_period_and_meeting(params[:period],params[:meeting])
+    else
+      @session = Session.find(params[:id])
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @session }
+    end
+  end
+
+  def bookmarks
+    session = Session.find(params[:session_id])
+    xml = Builder::XmlMarkup.new  
+    xml.instruct!
+    xmldata = xml.data do
+      session.bookmark_sets.find_by_typ(params[:type]||'manualmatch').bookmarks.each do |bk|
+        attr = {         
+          :title => (bk.person)? bk.person.lastname : bk.title,
+          :start => (session.date + bk.pos.seconds).strftime('%b %d %Y %H:%M:%S GMT%z')
+        }
+        if bk.length
+          attr[:end] = (session.date + bk.pos.seconds + bk.length.seconds).strftime('%b %d %Y %H:%M:%S GMT%z')
+          attr[:durationEvent] = true
+        else
+          attr[:durationEvent] = false
+        end
+        xml.event(attr)
+      end
+    end
+
+    respond_to do |format|
+      format.xml { render xml: xmldata }
+    end
+  end
+
+  def segments
+    session = Session.find(params[:session_id])
+    @segments = session.transcript_segments
+    if params[:type]
+      @segments = @segments.select {|segm| segm[:type] == params[:type].to_sym} 
+    end    
+    data = {:dateTimeFormat => 'iso8601'}
+    data[:events] = @segments.collect do |segm| 
+      {:start => (session.date + segm[:begin].seconds).strftime('%b %d %Y %H:%M:%S GMT%z'), 
+       :title => segm[:name],
+       :durationEvent => false
+     }
+    end
+    data[:events] = data[:events][0..1]
+    xml = Builder::XmlMarkup.new  
+    xml.instruct!
+    xmldata = xml.data do
+      @segments.each do |segm|
+        xml.event(
+          :title => (segm[:name]||segm[:speaker]||"").titleize, 
+          :start => (session.date + segm[:begin].seconds).strftime('%b %d %Y %H:%M:%S GMT%z'), 
+          :end => (session.date + segm[:end].seconds).strftime('%b %d %Y %H:%M:%S GMT%z'), 
+          :durationEvent => (params[:duration]||'true').to_bool
+          )
+      end
+    end
+
+    respond_to do |format|
+      format.xml { render xml: xmldata }
+      format.json { render json: @segments }
     end
   end
 
@@ -40,8 +104,9 @@ class SessionsController < ApplicationController
   # POST /sessions
   # POST /sessions.json
   def create
-    @session = Session.new(params[:session])
-
+    @session = Session.new(params[:session].except(:chamber_id))
+    @chamber = Chamber.find(params[:session][:chamber_id])
+    @session.chamber = @chamber
     respond_to do |format|
       if @session.save
         format.html { redirect_to @session, notice: 'Session was successfully created.' }
@@ -57,9 +122,9 @@ class SessionsController < ApplicationController
   # PUT /sessions/1.json
   def update
     @session = Session.find(params[:id])
-
+    @chamber = Chamber.find(params[:session][:chamber_id])
     respond_to do |format|
-      if @session.update_attributes(params[:session])
+      if @session.chamber = @chamber and @session.update_attributes(params[:session].except(:chamber_id))
         format.html { redirect_to @session, notice: 'Session was successfully updated.' }
         format.json { head :no_content }
       else

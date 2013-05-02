@@ -1,0 +1,46 @@
+<%= form_for([@session || @text_bookmark.session,@text_bookmark]) do |f| %>
+  <% if @text_bookmark.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@text_bookmark.errors.count, "error") %> prohibited this text_bookmark from being saved:</h2>
+
+      <ul>
+      <% @text_bookmark.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :pos %><br />
+    <%= f.number_field :pos %>
+  </div>
+  <div class="field">
+    <%= f.label :length %><br />
+    <%= f.number_field :length %>
+  </div>
+
+  <div class="field">
+    <%= f.label :typ,"type" %><br />
+    <%= f.select(:typ, [['',nil],['section','section'],['speech','speech']]) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :person_id %><br />
+    <%= f.select(:person_id, Person.all.collect { |p| [p,p.id]}) %>
+  </div>
+
+  <div class="field">
+    <label>Bookmark pos</label><br />
+    <div<%= @text_bookmark.bookmark.pos if @text_bookmark.bookmark %></div>
+  </div>
+
+  <div class="field">
+    <label>Text</label>
+    <p><%= @text_bookmark.text %></p>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

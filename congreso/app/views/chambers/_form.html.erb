@@ -1,0 +1,34 @@
+<%= form_for(@chamber) do |f| %>
+  <% if @chamber.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@chamber.errors.count, "error") %> prohibited this chamber from being saved:</h2>
+
+      <ul>
+      <% @chamber.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :photo_medium %><br />
+    <%= f.text_field :photo_medium %>
+  </div>
+  <div class="field">
+    <%= f.label :photo_small %><br />
+    <%= f.text_field :photo_small %>
+  </div>
+  <div class="field">
+    <%= f.label :disabled %><br />
+    <%= f.check_box :disabled %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

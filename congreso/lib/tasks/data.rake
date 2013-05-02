@@ -20,10 +20,17 @@ namespace :data do
         p.photo_medium = photo.sub('small','medium')
         p.save!
       end
+    when 'speakerchanges'
+      session = Session.find(ENV['session'])
+      session.bookmarks.clear
+      data = CSV.read(ENV['filename'])
+      data.each do |row|
+        puts row
+        session.bookmarks.create({:pos => row[0].to_i, :score => row[2].to_f})
+      end
+    
     when 'srt'
-      s = BookmarkSet.find_or_create_by_name_and_session_id(ENV['name'],ENV['session'].to_i)
-      s.typ = 'manualmatch'
-      s.save!
+      s = BookmarkSet.find_or_create_by_typ_and_session_id('manualmatch',ENV['session'].to_i)
       data = CSV.read(ENV['filename'])
       data.each do |row|
         puts "#{row[0]},#{row[1]}"
@@ -36,6 +43,8 @@ namespace :data do
         b.save!
       end
       s.match_text
+      s_sections = BookmarkSet.find_or_create_by_typ_and_session_id('sections',ENV['session'].to_i)
+      s_sections.match_against(s)
     end
   end
 end

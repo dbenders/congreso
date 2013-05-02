@@ -1,0 +1,17 @@
+<% content_for :nav do -%>
+  <li class="active">
+    <%= link_to(@chamber.name, @chamber) %>
+  </li>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<%= image_tag @chamber.photo_medium %>
+
+<h1>Listado de sesiones</h1>
+
+<ul>
+    <% @chamber.sessions.each do |session| %>
+        <li><%= link_to(session.name,pretty_session_path(:chamber_name => session.chamber.name, :period => session.period, :meeting => session.meeting)) %></li>
+    <% end %>
+</ul>

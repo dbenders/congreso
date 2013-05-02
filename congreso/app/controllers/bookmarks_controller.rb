@@ -1,11 +1,23 @@
+# encoding: UTF-8
 class BookmarksController < ApplicationController
   # GET /bookmarks
   # GET /bookmarks.json
   def index
-    @bookmarks = Bookmark.all
+    @session = Session.find(params[:session_id])
+    @bookmarks = @session.bookmarks
+    @text_bookmarks = @session.text_bookmarks
 
     respond_to do |format|
       format.html # index.html.erb
+      format.json { render json: @bookmarks }
+    end
+  end
+
+  def match
+    @session = Session.find(params[:session_id])
+    @session.match_bookmarks
+    respond_to do |format|
+      format.html { redirect_to session_bookmarks_path(@session), notice: 'Bookmarks were successfully matched.' }    
       format.json { render json: @bookmarks }
     end
   end
@@ -37,6 +49,27 @@ class BookmarksController < ApplicationController
     @bookmark = Bookmark.find(params[:id])
   end
 
+  def toggle_matchtyp
+    @bookmark = Bookmark.find(params[:bookmark_id])
+    if @bookmark.matchtyp == 'manual'
+      @bookmark.matchtyp = 'auto'
+    else
+      @bookmark.matchtyp = 'manual'
+    end
+    respond_to do |format|
+      if @bookmark.save
+        format.html { redirect_to @bookmark, notice: 'Bookmark was successfully updated.' }
+        format.text { render text: @bookmark.matchtyp }
+        format.json { render json: @bookmark, status: :updated, location: session_bookmark_path(@bookmark.session,@bookmark) }
+      else
+        format.html { render action: "edit" }
+        format.text { render text: "???" }
+        format.json { render json: @bookmark.errors, status: :unprocessable_entity }
+      end
+    end
+  end    
+
+
   # POST /bookmarks
   # POST /bookmarks.json
   def create
@@ -57,10 +90,10 @@ class BookmarksController < ApplicationController
   # PUT /bookmarks/1.json
   def update
     @bookmark = Bookmark.find(params[:id])
-
-    respond_to do |format|
-      if @bookmark.update_attributes(params[:bookmark])
-        format.html { redirect_to @bookmark, notice: 'Bookmark was successfully updated.' }
+    respond_to do |format|      
+      @bookmark.text_bookmark = TextBookmark.find(params[:bookmark][:text_bookmark_id])
+      if @bookmark.update_attributes(params[:bookmark].except(:text_bookmark_id))
+        format.html { redirect_to session_bookmarks_path(@bookmark.session), notice: 'Bookmark was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

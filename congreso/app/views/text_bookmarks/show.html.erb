@@ -1,0 +1,18 @@
+
+<p>
+  <b>Pos:</b>
+  <%= @text_bookmark.pos %>
+</p>
+
+<p>
+  <b>Length:</b>
+  <%= @text_bookmark.length %>
+</p>
+
+<p>
+  <b>Bookmark pos:</b>
+  <%= @text_bookmark.bookmark.pos if @text_bookmark.bookmark %>
+</p>
+
+<%= link_to 'Edit', edit_session_text_bookmark_path(@text_bookmark.session,@text_bookmark) %> |
+<%= link_to 'Back', :back %>

@@ -1,0 +1,21 @@
+<div class="well well-round">
+<% if @person.party.website %>	
+	<%= link_to @person.party.website do %>
+		<div class="alert alert-success">
+			<%= @person.party.name %>
+		</div>
+	<% end %>
+<% else %>
+	<div class="alert alert-success">
+		<%= @person.party.name %>
+	</div>
+<% end %>
+
+
+<div>
+	<span>
+	<%= image_tag @person.photo_medium %>
+</span>
+<h5><%= "#{@person.firstname} #{@person.lastname}" %></h5>
+
+</div>

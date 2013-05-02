@@ -1,38 +1,83 @@
-<p id="notice"><%= notice %></p>
+<% content_for :nav do -%>
+  <li>
+    <%= link_to(@session.chamber.name, @session.chamber) %>
+  </li>
+  <li class="active">
+    <%= link_to(@session.name, @session) %>
+  </li>
+<% end %>
 
-<p>
-  <b>Date:</b>
-  <%= @session.date %>
-</p>
+    <div class="row">
+      <div class="offset1">
+        <h5><%= @session.name %></h5>
+      </div>
+    </div>
 
-<p>
-  <b>Chamber:</b>
-  <%= @session.chamber %>
-</p>
+    <div class="row">
+      <div class="span4">
+        <div id="vid"></div>
+      </div>
+      <div class="offset4 span4">
+        <ul class="nav" style="height: 480px; overflow-y:scroll">
+          <% @session.text_bookmarks.each do |tbk| %>
+              <% if tbk.typ == 'section' %>
+                <li><span class="label label-important"><%= tbk.text %></span></li>
+              <% elsif tbk.person %>
+                <li id="<%= tbk.pos %>">
+                  <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.pos %>,'<%= session_text_bookmark_transcript_path(@session,tbk) %>','<%= person_card_path(tbk.person) %>')">
+                  <table>
+                    <tr>
+                      <td rowspan='2'>
+                        <img src="<%= tbk.person.photo_small %>" class="img-polaroid"/>
+                      </td>
+                      <td>
+                        <b><%= tbk.person.fullname %></b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <small><%= tbk.person.party.name %></small>      
+                      </td>
+                    </tr>
+                  </table>
+                </a> 
+              <% end %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div id="info" style="display:none">
+      <div class="span2">
+        <span id="person_card"></span>
+      </div>
+      <div class="span8 well">
+        <p id="text"></p>
+        <button class="btn" disabled>Descargar video</button>
+        <button class="btn" disabled>Descargar .doc</button>
+        <button class="btn" disabled><%= image_tag "http://www.ecreativeim.com/blog/wp-content/uploads/2011/05/facebook-like-icon.png", :width => 25 %></button>
+      </div>
+    </div>
 
-<p>
-  <b>Name:</b>
-  <%= @session.name %>
-</p>
+  <script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
+  <script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
 
-<p>
-  <b>Segments:</b>
-  <ul>
-    <% @session.transcript_segments.each do |segm| %>
-      <% if segm[:type] == :section %>
-        <li><%= segm[:name] %></li>
-      <% elsif segm[:type] == :speech %>
-        <li><%= segm[:speaker] %></li>
-      <% end %>
-    <% end %>
-  </ul>
-</p>
+  <script>
+ 
+    jwplayer('vid').setup({
+        file: '<%= @session.video_url %>',
+        width: '600',
+        height: '480'
+    });
 
-<p>
-  <b>Video url:</b>
-  <%= @session.video_url %>
-</p>
-
-
-<%= link_to 'Edit', edit_session_path(@session) %> |
-<%= link_to 'Back', sessions_path %>
+    function seek(pos,transcript_url,person_url) {
+      jwplayer('vid').seek(pos);
+      $("#info").show();
+      $.get(transcript_url, function(resp) {
+        $("#text").html(resp);
+      });
+      $.get(person_url, function(resp) {
+        $("#person_card").html(resp);
+      });
+    }
+  </script>
+  <script src="js/bootstrap.min.js"></script>  

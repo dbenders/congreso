@@ -1,38 +1,7 @@
-<h1>Listing sessions</h1>
+<h1>Listado de sesiones</h1>
 
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Chamber</th>
-    <th>Name</th>
-    <th>Transcript</th>
-    <th>Video url</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @sessions.each do |session| %>
-  <tr>
-    <td><%= session.date %></td>
-    <td><%= session.chamber %></td>
-    <td><%= session.name %></td>
-    <td>
-        <ul>
-            <% session.transcript_segments.each do |segm| %>
-                    <li><%= segm %></li>
-            <% end %>
-        </ul>
-    </td>
-    <!-- <td><%= session.transcript %></td> -->
-    <td><%= session.video_url %></td>
-    <td><%= link_to 'Show', session %></td>
-    <td><%= link_to 'Edit', edit_session_path(session) %></td>
-    <td><%= link_to 'Destroy', session, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Session', new_session_path %>
+<ul>
+    <% @sessions.each do |session| %>
+        <li><%= link_to(session.name,session) %></li>
+    <% end %>
+</ul>

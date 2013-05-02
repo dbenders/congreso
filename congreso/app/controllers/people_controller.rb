@@ -21,6 +21,15 @@ class PeopleController < ApplicationController
     end
   end
 
+  # GET /people/1/card
+  def card
+    @person = Person.find(params[:person_id])
+
+    respond_to do |format|
+      format.html {render :layout => false}
+    end
+  end
+
   # GET /people/new
   # GET /people/new.json
   def new

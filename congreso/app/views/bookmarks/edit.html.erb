@@ -2,5 +2,5 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @bookmark %> |
-<%= link_to 'Back', bookmarks_path %>
+<%= link_to 'Show', session_bookmark_path(@bookmark.session,@bookmark) %> |
+<%= link_to 'Back', :back %>

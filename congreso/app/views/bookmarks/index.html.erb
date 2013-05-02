@@ -1,31 +1,121 @@
+<% content_for :head do -%>
+  <style>
+    .manual {
+      color: green;
+      font-weight: bold;
+    }
+    .pos_selected {
+      background-color: pink;
+    }
+  </style>
+<% end %>
+
 <h1>Listing bookmarks</h1>
 
+<div class="row">
+<div class="span4" style="height: 480px; overflow-y:scroll">
 <table>
   <tr>
-    <th>Session</th>    
-    <th>Type</th>
     <th>Pos</th>
-    <th>Transcript pos</th>
-    <th>Person</th>
-    <th></th>
+    <th>Transcript person</th>
     <th></th>
     <th></th>
   </tr>
 
 <% @bookmarks.each do |bookmark| %>
-  <tr>
-    <td><%= bookmark.bookmark_set_id %></td>    
-    <td><%= bookmark.typ %></td>
-    <td><%= "#{bookmark.pos} - #{(bookmark.length)? bookmark.pos+bookmark.length : ''}" %></td>
-    <td><%= "#{bookmark.textpos} - #{(bookmark.textlength)? bookmark.textpos+bookmark.textlength : ''}" %></td>    
-    <td><%= link_to(bookmark.person,edit_person_path(bookmark.person)) if bookmark.person %></td>
-    <td><%= link_to 'Show', bookmark %></td>
-    <td><%= link_to 'Edit', edit_bookmark_path(bookmark) %></td>
-    <td><%= link_to 'Destroy', bookmark, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  <tr id='<%= "bookmark_#{bookmark.id}" %>'>
+    <td class='pos'>
+      <%= link_to bookmark.pos, "javascript:seek(#{bookmark.id},#{bookmark.pos},'#{(bookmark.text_bookmark)? session_text_bookmark_transcript_path(@session,bookmark.text_bookmark) : nil}')" %>
+    </td>    
+    <td class='speaker'>
+        <%= link_to("javascript:toggle(#{bookmark.id},'#{session_bookmark_toggle_matchtyp_path(bookmark.session,bookmark, :format => :text)}')", :class => [bookmark.matchtyp,'person']) do %>
+            <% if bookmark.text_bookmark and bookmark.text_bookmark.person %>
+              <%= bookmark.text_bookmark.person %>
+            <% else %>
+              &nbsp;              
+            <% end %>
+        <% end %>
+        <span class="arrows">        
+          <% if bookmark.text_bookmark and bookmark.text_bookmark.person %>
+              <%= link_to("javascript:moveSpeaker('#{session_text_bookmark_up_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
+                <i class="icon-arrow-up"></i>
+              <% end %>
+              <%= link_to("javascript:moveSpeaker('#{session_text_bookmark_down_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
+                <i class="icon-arrow-down"></i>
+              <% end %>
+          <% end %>
+        </span>
+    </td>
+    <td><%= link_to 'Edit', edit_session_bookmark_path(@session,bookmark) %></td>
   </tr>
 <% end %>
 </table>
+</div>
 
-<br />
+<div class="span4">
+  <div id="vid"></div>
+  <!-- <video id="vid" src="/video" controls width="640" height="480"/> -->        
+  <button class="btn" onclick="manualseek(-5)">&lt;&lt;</button>
+  <button class="btn" onclick="manualseek(5)">&gt;&gt;</button>
 
-<%= link_to 'New Bookmark', new_bookmark_path %>
+</div>  
+
+</div>
+
+<div class="row">
+  <div class="span6">
+    <div id="text"></div>
+</div>
+
+<script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
+<script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
+
+<script>
+
+  jwplayer('vid').setup({
+      file: '<%= @session.video_url %>',
+      width: '600',
+      height: '480'
+  });
+
+
+  function moveSpeaker(url) {
+    $.getJSON(url, function(resp) {
+      var html = $("#bookmark_"+resp.prev_bookmark+" .speaker a").html();
+      $("#bookmark_"+resp.prev_bookmark+" .speaker a.person").html("");
+      $("#bookmark_"+resp.current_bookmark+" .speaker a.person").html(html);
+
+      var html = $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html();
+      $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html("");
+      $("#bookmark_"+resp.current_bookmark+" .speaker .arrows").html(html);      
+    });
+  }
+
+  function toggle(id, url) {
+    $.get(url, function(resp) {
+      var e = $("#bookmark_"+id+" .speaker a.person");
+      e.removeClass("manual");
+      e.removeClass("auto");
+      e.addClass(resp);
+    });
+  }
+
+  function manualseek(ofs) {
+    jwplayer('vid').seek(jwplayer('vid').getPosition() + ofs);
+  }
+
+  var previd = null;
+  function seek(id,pos,transcript_url) {
+    if(previd != null) {
+      $("#bookmark_"+previd+" .pos a").removeClass("pos_selected");
+    }
+    $("#bookmark_"+id+" .pos a").addClass("pos_selected");
+    previd = id;
+    jwplayer('vid').seek(pos);
+    if(transcript_url != "") {
+      $.get(transcript_url, function(resp) {
+        $("#text").html(resp);
+      });
+    }
+  }
+</script>

@@ -20,7 +20,7 @@ class TextBookmarksController < ApplicationController
     prev_bookmark.length = (text_bookmark.pos + text_bookmark.length) - prev_bookmark.pos
     respond_to do |format|
       if prev_bookmark.save and text_bookmark.destroy
-        format.html { redirect_to session_text_bookmarks_path(text_bookmark.session), notice: 'Text bookmarks were merged successfully.' }
+        format.html { redirect_to session_text_bookmark_path(prev_bookmark.session,prev_bookmark), notice: 'Text bookmarks were merged successfully.' }
       else
         format.html { render action: "edit" }
       end
@@ -31,8 +31,8 @@ class TextBookmarksController < ApplicationController
     sesion = Session.find(params[:session_id])
     sesion.rebuild_text_bookmarks
     respond_to do |format|
-      format.html { redirect_to text_bookmarks_path, notice: 'Text bookmark was successfully recreated.' }
-      format.json { render json: TextBookmark.find_all_by_session_id(params[:session_id]), status: :created, location: text_bookmarks_path }
+      format.html { redirect_to session_text_bookmarks_path(sesion), notice: 'Text bookmark was successfully recreated.' }
+      format.json { render json: TextBookmark.find_all_by_session_id(params[:session_id]), status: :created, location: session_text_bookmarks_path(sesion) }
     end
   end
 
@@ -130,7 +130,11 @@ class TextBookmarksController < ApplicationController
   # PUT /text_bookmarks/1.json
   def update
     @text_bookmark = TextBookmark.find(params[:id])
-    @text_bookmark.person = Person.find(params[:text_bookmark][:person_id])
+    if not params[:text_bookmark][:person_id].empty?
+      @text_bookmark.person = Person.find(params[:text_bookmark][:person_id]) 
+    else
+      @text_bookmark.person = nil
+    end
     respond_to do |format|
       if @text_bookmark.update_attributes(params[:text_bookmark].except(:person_id))
         format.html { redirect_to session_text_bookmarks_path(@text_bookmark.session), notice: 'Text bookmark was successfully updated.' }

@@ -22,9 +22,9 @@
           <% @session.text_bookmarks.each do |tbk| %>
               <% if tbk.typ == 'section' %>
                 <li><span class="label label-important"><%= tbk.text %></span></li>
-              <% elsif tbk.person %>
-                <li id="<%= tbk.pos %>">
-                  <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.pos %>,'<%= session_text_bookmark_transcript_path(@session,tbk) %>','<%= person_card_path(tbk.person) %>')">
+              <% elsif tbk.person and tbk.bookmark and tbk.bookmark.matchtyp == 'manual' %>
+                <li id="<%= tbk.bookmark.pos %>">
+                  <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.bookmark.pos %>,'<%= session_text_bookmark_transcript_path(@session,tbk) %>','<%= person_card_path(tbk.person) %>')">
                   <table>
                     <tr>
                       <td rowspan='2'>

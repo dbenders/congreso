@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502133215) do
+ActiveRecord::Schema.define(:version => 20130502155317) do
 
   create_table "bookmark_sets", :force => true do |t|
     t.string   "typ"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(:version => 20130502133215) do
     t.integer  "chamber_id"
     t.integer  "meeting"
     t.integer  "period"
+    t.boolean  "disabled"
   end
 
   create_table "text_bookmarks", :force => true do |t|

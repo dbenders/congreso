@@ -93,7 +93,7 @@ class BookmarksController < ApplicationController
     respond_to do |format|      
       @bookmark.text_bookmark = TextBookmark.find(params[:bookmark][:text_bookmark_id])
       if @bookmark.update_attributes(params[:bookmark].except(:text_bookmark_id))
-        format.html { redirect_to session_bookmarks_path(@bookmark.session), notice: 'Bookmark was successfully updated.' }
+        format.html { redirect_to session_bookmark_path(@bookmark.session,@bookmark), notice: 'Bookmark was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

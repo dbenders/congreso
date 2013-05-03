@@ -27,7 +27,7 @@
 
   <div class="field">
     <%= f.label :person_id %><br />
-    <%= f.select(:person_id, Person.all.collect { |p| [p,p.id]}) %>
+    <%= f.select(:person_id, [["",nil]] + Person.all.collect { |p| [p,p.id]}) %>
   </div>
 
   <div class="field">

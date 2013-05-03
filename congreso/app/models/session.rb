@@ -1,7 +1,7 @@
 class Session < ActiveRecord::Base
   include SessionsHelper
 
-  attr_accessible :date, :name, :transcript, :video_url, :length, :period, :meeting
+  attr_accessible :date, :name, :transcript, :video_url, :length, :period, :meeting, :disabled
   has_many :text_bookmarks, :order => "pos ASC"
   has_many :bookmarks, :order => "pos ASC"
   belongs_to :chamber
@@ -35,7 +35,8 @@ class Session < ActiveRecord::Base
         end
         if curr_section
           curr_section[:end] = pos
-          curr_section[:name] = transcript[curr_section[:begin]..curr_section[:end]].scan(/\n(.*)\n/)[0][0].strip 
+
+          curr_section[:name] = ((transcript[curr_section[:begin]..curr_section[:end]].scan(/\n(.*)\n/)[0]||[])[0]||"").strip 
         end
         curr_section = {:type => :section, :number => line.scan(/\d+/)[0].to_i, :begin => pos}
         ans << curr_section
@@ -106,5 +107,6 @@ class Session < ActiveRecord::Base
       end
       b.save!
     end
+    require 'debugger'; debugger
   end  
 end

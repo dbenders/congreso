@@ -1,25 +1,43 @@
-<h1>Listing people</h1>
+<div class="span3 well">
+  <ul class="nav nav-list">  
+    <li class="<%= (@chamber.nil? && @province.nil?)? 'active' : ''%>"><a href="#">Todos</a></li>   
+    <li class="nav-header">
+      Por cámara
+      <% Chamber.all.each do |chamber| %>
+        <% if @chamber == chamber %>
+          <li class="active">
+            <%= link_to chamber.name, people_path(:province => @province, :chamber => nil) %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to chamber.name, people_path(:province => @province, :chamber => chamber) %>
+          </li>
+        <% end %>        
+      <% end %>
+    </li>
+    <li class="nav-header">
+      Por provincia
+    </li>
+      <% Province.all.each do |prov| %>
+        <% if @province == prov %>
+          <li class="active">
+            <%= link_to prov.name, people_path(:province => nil, :chamber => @chamber) %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to prov.name, people_path(:province => prov, :chamber => @chamber) %>
+          </li>
+        <% end %>        
+      <% end %>
+  </ul>
+</div>
 
-<table>
-  <tr>
-    <th>Photo</th>
-    <th>Name</th>
-    <th>Province</th>
-    <th>Party</th>
-    <th></th>
-  </tr>
-
-<% @people.each do |person| %>
-  <tr>
-    <td><img src='<%= person.photo_small %>'/></td>
-    <td><%= link_to(person,edit_person_path(person)) %></td>
-    <td><%= link_to(person.province,edit_province_path(person.province)) %></td>
-    <td><%= link_to(person.party,edit_party_path(person.party)) %></td>
-    <td><%= link_to 'Destroy', person, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Person', new_person_path %>
+<div class="span7 well" style="height: 795px; overflow-y:scroll">
+  <ul class="thumbnails">
+    <% @people.each do |person| %>
+      <li class="span2">
+          <%= render 'card', :person => person %>
+      </li>
+    <% end %>
+  </ul>
+</div>

@@ -1,0 +1,20 @@
+<div class="well well-round">
+<%= link_to person do %>
+	<div class="alert alert-success">
+		<small><%= person.party.acronym||"<br/>".html_safe %></small>
+	</div>
+
+
+<div><center>
+	<span>
+	<%= image_tag person.photo_medium %>
+</span>
+<h5><%= "#{person.lastname.truncate(13)}" %></h5>
+
+
+</center></div>
+
+<% end %>
+</div>
+
+

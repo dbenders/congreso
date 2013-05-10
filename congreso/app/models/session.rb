@@ -4,10 +4,24 @@ class Session < ActiveRecord::Base
   attr_accessible :date, :name, :transcript, :video_url, :length, :period, :meeting, :disabled
   has_many :text_bookmarks, :order => "pos ASC"
   has_many :bookmarks, :order => "pos ASC"
+  has_many :you_tube_videos, :order => "num ASC"
   belongs_to :chamber
 
   def transcript=(text)
     self[:transcript] = text.gsub(/\r/,"")
+  end
+
+  def you_tube_video_ids
+    you_tube_videos.collect {|video| video.video_id}.join(',')
+  end
+
+  def you_tube_video_ids=(ids)
+    you_tube_videos.clear
+    ids.split(',').each_with_index do |id,i|
+      video = YouTubeVideo.new({:video_id => id, :num => i})
+      video.session = self
+      video.save!
+    end
   end
 
   def transcript_section_segments
@@ -21,29 +35,36 @@ class Session < ActiveRecord::Base
     section = 0
 
     transcript.split("\n").each do |line|
-
       if line =~ /^Sr/
         if not ans.empty? and not ans[-1][:end]
           ans[-1][:end] = pos -1
         end
 
-        ans << {:type => :speech, :speaker => line.scan(/Sra?\. (.*?)\.-/)[0][0],
-              :begin => pos + (line =~ /\.-/) + 2}        
-      elsif line =~ /^- \d+ -/
+        begin
+          ans << {:type => :speech, :speaker => line.scan(/Sra?\. (.*?)\.? ?-/)[0][0].strip,
+              :begin => pos + (line =~ /-/) + 2}        
+          #ans[-1][:begin] -= 1 if line[ans[-1][:begin]-pos-1] == ' ' 
+        rescue
+          require 'debugger'; debugger
+        end
+      elsif line =~ /^- \d+ -$/
         if not ans.empty? and not ans[-1][:end]
           ans[-1][:end] = pos -1
         end
         if curr_section
-          curr_section[:end] = pos
-
+          #curr_section[:end] = pos
           curr_section[:name] = ((transcript[curr_section[:begin]..curr_section[:end]].scan(/\n(.*)\n/)[0]||[])[0]||"").strip 
         end
         curr_section = {:type => :section, :number => line.scan(/\d+/)[0].to_i, :begin => pos}
         ans << curr_section
-      elsif line =~ /^-/ or line == line.upcase
+      elsif line =~ /^-/
         if not ans.empty? and not ans[-1][:end]
           ans[-1][:end] = pos -1
         end
+      elsif line == line.upcase        
+        if not ans.empty? and not ans[-1][:end]
+          ans[-1][:end] = pos + line.length
+        end        
       end
       pos += line.length + 1
     end
@@ -107,6 +128,5 @@ class Session < ActiveRecord::Base
       end
       b.save!
     end
-    require 'debugger'; debugger
   end  
 end

@@ -2,13 +2,27 @@ class ProvincesController < ApplicationController
   # GET /provinces
   # GET /provinces.json
   def index
-    @provinces = Province.all
+    @provinces = Province.all.sort_by {|p|p.name}
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @provinces }
     end
   end
+
+  def merge
+    @prov_from = Province.find_by_name(params[:from])
+    @prov_to = Province.find_by_name(params[:to])
+
+    Person.all.select {|p| p.province == @prov_from}.each do |p|
+      p.province = @prov_to
+      p.save!
+    end
+    respond_to do |format|
+        format.html { redirect_to provinces_path, notice: 'Province was successfully merged.' }
+    end    
+  end
+
 
   # GET /provinces/1
   # GET /provinces/1.json

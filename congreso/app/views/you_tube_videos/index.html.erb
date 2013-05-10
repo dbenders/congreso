@@ -1,0 +1,33 @@
+<h1>Listing you_tube_videos</h1>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Video id</th>
+    <th>Name</th>
+    <th>Num</th>
+    <th>Session</th>
+    <th>Length</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @you_tube_videos.each do |you_tube_video| %>
+  <tr>
+    <td><%= you_tube_video.id %></td>
+    <td><%= you_tube_video.video_id %></td>
+    <td><%= you_tube_video.name %></td>
+    <td><%= you_tube_video.num %></td>
+    <td><%= you_tube_video.session_id %></td>
+    <td><%= you_tube_video.length %></td>
+    <td><%= link_to 'Show', you_tube_video %></td>
+    <td><%= link_to 'Edit', edit_you_tube_video_path(you_tube_video) %></td>
+    <td><%= link_to 'Destroy', you_tube_video, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New You tube video', new_you_tube_video_path %>

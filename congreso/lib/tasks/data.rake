@@ -6,6 +6,7 @@ namespace :data do
   task :import => :environment do
     case ENV['type']
     when 'people'
+      chamber = Chamber.find_by_name(ENV['chamber'])
       data = CSV.read(ENV['filename'])
       data.each do |row|
         full_name,province,party,photo = row
@@ -14,6 +15,7 @@ namespace :data do
         full_name = full_name.sub('Ñ','ñ').sub('Á','á').sub('É','é').sub('Í','í').sub('Ó','ó').sub('Ú','ú')
         p.province = Province.find_or_create_by_name(province)
         p.party = Party.find_or_create_by_name(party)
+        p.chamber = chamber
         lastname,firstname = full_name.split(',')
         p.firstname = firstname.strip
         p.lastname = lastname.strip
@@ -22,7 +24,7 @@ namespace :data do
       end
     when 'speakerchanges'
       session = Session.find(ENV['session'])
-      session.bookmarks.clear
+      #session.bookmarks.clear
       data = CSV.read(ENV['filename'])
       data.each do |row|
         puts row

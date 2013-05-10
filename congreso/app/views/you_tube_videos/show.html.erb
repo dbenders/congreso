@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Id:</b>
+  <%= @you_tube_video.id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @you_tube_video.name %>
+</p>
+
+<p>
+  <b>Num:</b>
+  <%= @you_tube_video.num %>
+</p>
+
+<p>
+  <b>Session:</b>
+  <%= @you_tube_video.session_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_you_tube_video_path(@you_tube_video) %> |
+<%= link_to 'Back', you_tube_videos_path %>

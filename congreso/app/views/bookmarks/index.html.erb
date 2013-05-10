@@ -1,4 +1,6 @@
+
 <% content_for :head do -%>
+  <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" %>
   <style>
     .manual {
       color: green;
@@ -54,9 +56,8 @@
 
 <div class="span4">
   <div id="vid"></div>
-  <!-- <video id="vid" src="/video" controls width="640" height="480"/> -->        
-  <button class="btn" onclick="manualseek(-20)">&lt;&lt;</button>
-  <button class="btn" onclick="manualseek(20)">&gt;&gt;</button>
+  <button class="btn" onclick="manualseek(-10)">&lt;&lt;</button>
+  <button class="btn" onclick="manualseek(10)">&gt;&gt;</button>
 
 </div>  
 
@@ -67,55 +68,125 @@
     <div id="text"></div>
 </div>
 
-<script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
-<script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
+<% if @session.video_url and not @session.video_url.empty? %>
 
-<script>
+  <script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
+  <script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
 
-  jwplayer('vid').setup({
-      file: '<%= @session.video_url %>',
-      width: '600',
-      height: '480'
-  });
+  <script>
 
-
-  function moveSpeaker(url) {
-    $.getJSON(url, function(resp) {
-      var html = $("#bookmark_"+resp.prev_bookmark+" .speaker a").html();
-      $("#bookmark_"+resp.prev_bookmark+" .speaker a.person").html("");
-      $("#bookmark_"+resp.current_bookmark+" .speaker a.person").html(html);
-
-      var html = $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html();
-      $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html("");
-      $("#bookmark_"+resp.current_bookmark+" .speaker .arrows").html(html);      
+    jwplayer('vid').setup({
+        file: '<%= @session.video_url %>',
+        width: '600',
+        height: '480'
     });
-  }
 
-  function toggle(id, url) {
-    $.get(url, function(resp) {
-      var e = $("#bookmark_"+id+" .speaker a.person");
-      e.removeClass("manual");
-      e.removeClass("auto");
-      e.addClass(resp);
-    });
-  }
 
-  function manualseek(ofs) {
-    jwplayer('vid').seek(jwplayer('vid').getPosition() + ofs);
-  }
+    function moveSpeaker(url) {
+      $.getJSON(url, function(resp) {
+        var html = $("#bookmark_"+resp.prev_bookmark+" .speaker a").html();
+        $("#bookmark_"+resp.prev_bookmark+" .speaker a.person").html("");
+        $("#bookmark_"+resp.current_bookmark+" .speaker a.person").html(html);
 
-  var previd = null;
-  function seek(id,pos,transcript_url) {
-    if(previd != null) {
-      $("#bookmark_"+previd+" .pos a").removeClass("pos_selected");
-    }
-    $("#bookmark_"+id+" .pos a").addClass("pos_selected");
-    previd = id;
-    jwplayer('vid').seek(pos);
-    if(transcript_url != "") {
-      $.get(transcript_url, function(resp) {
-        $("#text").html(resp);
+        var html = $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html();
+        $("#bookmark_"+resp.prev_bookmark+" .speaker .arrows").html("");
+        $("#bookmark_"+resp.current_bookmark+" .speaker .arrows").html(html);      
       });
     }
-  }
+
+
+    var previd = null;
+    function seek(id,pos,transcript_url) {
+      if(previd != null) {
+        $("#bookmark_"+previd+" .pos a").removeClass("pos_selected");
+      }
+      $("#bookmark_"+id+" .pos a").addClass("pos_selected");
+      previd = id;
+      jwplayer('vid').seek(pos);
+      if(transcript_url != "") {
+        $.get(transcript_url, function(resp) {
+          $("#text").html(resp);
+        });
+      }
+    }
+
+    function manualseek(ofs) {
+      jwplayer('vid').seek(jwplayer('vid').getPosition() + ofs);
+    }
+
+  </script>
+
+<% else %>
+
+  <script>
+    var vids = [
+      <%= @session.you_tube_videos.collect {|video| "'#{video.video_id}'"}.join(',').html_safe %>
+    ];
+
+    var lengths = [
+      <%= @session.you_tube_videos.collect {|video| video.length}.join(',') %>
+    ];
+
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "vid" };
+    
+    swfobject.embedSWF("http://www.youtube.com/v/" + vids[0] + "?enablejsapi=1&playerapiid=ytplayer&version=3",
+                       "vid", "640", "480", "8", null, null, params, atts);
+
+    var ytplayer;
+    function onYouTubePlayerReady(playerId) {
+      ytplayer = document.getElementById("vid");
+    }
+
+    var previd = null;
+    var prevvid = vids[0];
+    var currpos = null;
+    function seek(id,pos,transcript_url) {
+      currpos = pos;
+      for(i=0; i<vids.length; i++) {
+        if(pos - lengths[i] < 0) {
+          break;
+        }
+        pos -= lengths[i];
+      }
+      if(prevvid != vids[i]) {
+        ytplayer.loadVideoById(vids[i]);
+        prevvid = vids[i];
+      }
+      ytplayer.seekTo(pos);
+
+      if(previd != null) {
+        $("#bookmark_"+previd+" .pos a").removeClass("pos_selected");
+      }
+      $("#bookmark_"+id+" .pos a").addClass("pos_selected");
+      previd = id;
+      //jwplayer('vid').seek(pos);
+      if(transcript_url != "") {
+        $.get(transcript_url, function(resp) {
+          $("#text").html(resp);
+        });
+      }
+    }
+
+    function manualseek(ofs) {
+      ytplayer.seekTo(currpos+ofs);
+      currpos += ofs;
+    }
+
+  </script>
+
+<% end %>
+
+<script>
+    function toggle(id, url) {
+      $.get(url, function(resp) {
+        var e = $("#bookmark_"+id+" .speaker a.person");
+        e.removeClass("manual");
+        e.removeClass("auto");
+        e.addClass(resp);
+      });
+    }
+
 </script>
+
+

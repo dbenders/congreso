@@ -16,6 +16,7 @@ class SessionsController < ApplicationController
   # GET /sessions/1
   # GET /sessions/1.json
   def show
+    @tbk = TextBookmark.find(params[:tbk])
     if params[:period] and params[:meeting]
       @session = Session.find_by_period_and_meeting(params[:period],params[:meeting])
     else
@@ -124,7 +125,8 @@ class SessionsController < ApplicationController
     @session = Session.find(params[:id])
     @chamber = Chamber.find(params[:session][:chamber_id])
     respond_to do |format|
-      if @session.chamber = @chamber and @session.update_attributes(params[:session].except(:chamber_id))
+      if @session.chamber = @chamber and @session.you_tube_video_ids = params[:session][:you_tube_video_ids] and
+                @session.update_attributes(params[:session].except(:chamber_id).except(:you_tube_video_ids))
         format.html { redirect_to @session, notice: 'Session was successfully updated.' }
         format.json { head :no_content }
       else

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502155317) do
+ActiveRecord::Schema.define(:version => 20130509185550) do
 
   create_table "bookmark_sets", :force => true do |t|
     t.string   "typ"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20130502155317) do
     t.string   "website"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.string   "acronym"
   end
 
   create_table "people", :force => true do |t|
@@ -74,6 +75,7 @@ ActiveRecord::Schema.define(:version => 20130502155317) do
     t.datetime "updated_at",   :null => false
     t.integer  "party_id"
     t.integer  "province_id"
+    t.integer  "chamber_id"
   end
 
   create_table "provinces", :force => true do |t|
@@ -116,6 +118,16 @@ ActiveRecord::Schema.define(:version => 20130502155317) do
     t.integer  "person_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "you_tube_videos", :force => true do |t|
+    t.string   "name"
+    t.integer  "num"
+    t.integer  "session_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "video_id"
+    t.integer  "length"
   end
 
 end

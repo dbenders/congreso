@@ -1,43 +1,40 @@
-<p>
-  <b>Firstname:</b>
-  <%= @person.firstname %>
-</p>
-
-<p>
-  <b>Lastname:</b>
-  <%= @person.lastname %>
-</p>
-
-<p>
-  <b>Photo small:</b>
-  <%= @person.photo_small %>
-</p>
-
-<p>
-  <b>Photo medium:</b>
-  <%= @person.photo_medium %>
-</p>
-
-<p>
-  <b>Wikipedia:</b>
-  <%= @person.wikipedia %>
-</p>
-
-<p>
-  <b>Facebook:</b>
-  <%= @person.facebook %>
-</p>
-
-<p>
-  <b>Twitter:</b>
-  <%= @person.twitter %>
-</p>
-
-<p>
-  <b>Website:</b>
-  <%= @person.website %>
-</p>
+<div class="well well-round">
+<% if @person.party.website %>  
+  <%= link_to @person.party.website do %>
+    <div class="alert alert-success">
+      <%= @person.party.name %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="alert alert-success">
+    <%= @person.party.name %>
+  </div>
+<% end %>
 
 
-<%= link_to 'Edit', edit_person_path(@person) %> |
-<%= link_to 'Back', people_path %>
+<div>
+  <span>
+  <%= image_tag @person.photo_medium %>
+</span>
+<h5><%= "#{@person.firstname} #{@person.lastname}" %></h5>
+<div>
+<%= image_tag "http://cdn1.iconfinder.com/data/icons/yooicons_set01_socialbookmarks/512/social_twitter_box_blue.png", :width => 25 %>
+<%= image_tag "http://cdn.androidpolice.com/wp-content/uploads/2013/04/nexusae0_facebook1.png", :width => 25 %>
+<%= image_tag "http://www.itsecurityzone.com/wp-content/uploads/2012/05/Email-icon-square.png", :width => 35 %>
+</div>
+
+</div>
+
+<div>
+  <h5>Discursos</h5>
+  <ul>
+    <% @person.text_bookmarks.each do |tbk| %>
+      <% if tbk.session and tbk.bookmark %>
+        <li>        
+          <%= link_to tbk.session.name, session_path(tbk.session, :tbk => tbk) %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+

@@ -5,13 +5,13 @@ class TextBookmark < ActiveRecord::Base
   has_one :bookmark
 
   def text
-  	if !title.nil?
-  		title
-  	elsif session
+  	#if !title.nil?
+  	#	title
+  	#elsif session
   		session.transcript[pos..pos+length]
-    else 
-      nil
-  	end
+    #else 
+    #  nil
+  	#end
   end
 
   def matched?

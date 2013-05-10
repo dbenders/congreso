@@ -4,6 +4,7 @@
   <tr>
     <th>Photo</th>
     <th>Name</th>
+    <th>Acronym</th>
     <th>People</th>
     <th>Website</th>
     <th></th>
@@ -21,6 +22,7 @@
         <% end %>
     </td>
     <td><%= party.name %></td>
+    <td><%= party.acronym %></td>
     <td><%= party.people.length %></td>
     <td><%= party.website %></td>
     <td><%= link_to 'Show', party %></td>

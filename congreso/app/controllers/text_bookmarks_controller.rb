@@ -97,7 +97,6 @@ class TextBookmarksController < ApplicationController
   def new
     @session = Session.find(params[:session_id])
     @text_bookmark = TextBookmark.new
-    require 'debugger'; debugger
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @text_bookmark }
@@ -137,7 +136,8 @@ class TextBookmarksController < ApplicationController
     end
     respond_to do |format|
       if @text_bookmark.update_attributes(params[:text_bookmark].except(:person_id))
-        format.html { redirect_to session_text_bookmarks_path(@text_bookmark.session), notice: 'Text bookmark was successfully updated.' }
+        format.html { render action: "edit" }
+        #format.html { redirect_to session_text_bookmarks_path(@text_bookmark.session), notice: 'Text bookmark was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

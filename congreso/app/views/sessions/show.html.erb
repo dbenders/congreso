@@ -1,3 +1,7 @@
+<% content_for :head do -%>
+  <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" %>
+<% end %>
+
 <% content_for :nav do -%>
   <li>
     <%= link_to(@session.chamber.name, @session.chamber) %>
@@ -15,7 +19,8 @@
 
     <div class="row">
       <div class="span4">
-        <div id="vid"></div>
+        <div id="vid">
+        </div>
       </div>
       <div class="offset4 span4">
         <ul class="nav" style="height: 480px; overflow-y:scroll">
@@ -58,6 +63,8 @@
       </div>
     </div>
 
+<% if @session.video_url and not @session.video_url.empty? %>
+
   <script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
   <script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
 
@@ -80,4 +87,54 @@
       });
     }
   </script>
-  <script src="js/bootstrap.min.js"></script>  
+
+<% else %>
+
+
+  <script>
+    var vids = [
+      <%= @session.you_tube_videos.collect {|video| "'#{video.video_id}'"}.join(',').html_safe %>
+    ];
+
+    var lengths = [
+      <%= @session.you_tube_videos.collect {|video| video.length}.join(',') %>
+    ];
+
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "vid" };
+    
+    swfobject.embedSWF("http://www.youtube.com/v/" + vids[0] + "?enablejsapi=1&playerapiid=ytplayer&version=3",
+                       "vid", "640", "480", "8", null, null, params, atts);
+
+    var ytplayer;
+    function onYouTubePlayerReady(playerId) {
+      ytplayer = document.getElementById("vid");
+    }
+
+    function seek(pos,transcript_url,person_url) {
+      for(i=0; i<vids.length; i++) {
+        if(pos - lengths[i] > 0) {
+          break;
+        }
+        pos -= lengths[i];
+      }
+      debugger;
+      ytplayer.seekTo(pos);
+      $("#info").show();
+      $.get(transcript_url, function(resp) {
+        $("#text").html(resp);
+      });
+      $.get(person_url, function(resp) {
+        $("#person_card").html(resp);
+      });
+    }
+
+  </script>
+
+<% end %>  
+
+<script>
+  <% if @tbk %>
+    seek(<%= @tbk.bookmark.pos %>,'<%= session_text_bookmark_transcript_path(@session,@tbk) %>','<%= person_card_path(@tbk.person) %>');
+  <% end %>
+</script>

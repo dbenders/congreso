@@ -1,5 +1,7 @@
 Congreso::Application.routes.draw do
 
+  resources :you_tube_videos
+
   resources :chambers
 
   resources :bookmark_sets
@@ -20,7 +22,9 @@ Congreso::Application.routes.draw do
     end   
   end
 
-  resources :provinces
+  resources :provinces do
+    get 'merge', :on => :collection
+  end
 
   resources :parties
 

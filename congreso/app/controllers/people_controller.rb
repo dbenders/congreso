@@ -4,6 +4,16 @@ class PeopleController < ApplicationController
   def index
     @people = Person.all
 
+    if params[:chamber]
+      @chamber = Chamber.find(params[:chamber])
+      @people = @people.select {|p| p.chamber == @chamber} if @chamber
+    end
+
+    if params[:province]
+      @province = Province.find(params[:province])
+      @people = @people.select {|p| p.province == @province} if @province
+    end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @people }
@@ -66,9 +76,9 @@ class PeopleController < ApplicationController
   # PUT /people/1.json
   def update
     @person = Person.find(params[:id])
-
+    @province = Province.find(params[:person][:province_id])
     respond_to do |format|
-      if @person.update_attributes(params[:person])
+      if @person.province = @province and @person.update_attributes(params[:person].except(:province_id))
         format.html { redirect_to @person, notice: 'Person was successfully updated.' }
         format.json { head :no_content }
       else

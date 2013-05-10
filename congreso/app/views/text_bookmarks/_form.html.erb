@@ -27,7 +27,7 @@
 
   <div class="field">
     <%= f.label :person_id %><br />
-    <%= f.select(:person_id, [["",nil]] + Person.all.collect { |p| [p,p.id]}) %>
+    <%= f.select(:person_id, [["",nil]] + Person.all.select{|p| p.chamber == @text_bookmark.session.chamber}.sort_by {|p| p.fullname}.collect { |p| ["#{p.fullname} (#{p.chamber})",p.id]}) %>
   </div>
 
   <div class="field">

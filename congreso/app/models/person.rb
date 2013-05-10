@@ -2,7 +2,9 @@ class Person < ActiveRecord::Base
   attr_accessible :facebook, :firstname, :lastname, :photo_medium, :photo_small, :twitter, :website, :wikipedia
   belongs_to :province
   belongs_to :party
-  has_many :bookmarks
+  belongs_to :chamber
+  has_many :text_bookmarks
+
 
   def fullname
   	"#{lastname}, #{firstname}"

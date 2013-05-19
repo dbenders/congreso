@@ -1,5 +1,5 @@
 # encoding: UTF-8
-class BookmarksController < ApplicationController
+class Admin::BookmarksController < ApplicationController
   # GET /bookmarks
   # GET /bookmarks.json
   def index

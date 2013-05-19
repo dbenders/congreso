@@ -11,8 +11,8 @@
 <ul class="thumbnails">
   <% @chamber.sessions.find_all_by_period(period).each do |session| %>
     <li class="span4">
-      <%= link_to session_path(@chamber.name,session.period,session.meeting), :class => :thumbnail do %>
-        <%= image_tag "video.png", :width => 40, :height => 40 %>
+      <%= link_to pretty_session_path(@chamber,session.period,session.meeting), :class => :thumbnail do %>
+        <%= image_tag "http://cdn.shopify.com/s/files/1/0095/4332/t/12/assets/menu_support_video.png?1074", :width => 40, :height => 40 %>
         <center>
           <h5><%= session.date.strftime("%d/%m/%Y") if session %></h5>
           <p><%= session.name %></p>

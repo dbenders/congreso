@@ -1,25 +1,37 @@
 <div class="row">
-  <div class="span10">
-    <h2>Bienvenido a Proyecto #Congreso.ar<h2>
+  <div class="span12">
+    <h2>Bienvenido a #Congreso.ar<h2>
     <h5>Navegador de sesiones del Congreso Nacional Argentino</h5>
     <br/>
     <div class="well">
       <h5>Elija una cámara</h5>
       <ul class="thumbnails">
         <% @chambers.each do |chamber| %>
-          <li class="span4" style="height: 180px">
+          <li class="span3" style="height: 180px">
             <% if chamber.disabled %>
               <span class="thumbnail">
-                <%= image_tag chamber.photo_medium, :size => "130x130" %>             
+                <%= image_tag chamber.photo_medium, :size => "120x120" %>
+                <center><p class="label">Muy pronto!</p></center>
               </span>
             <% else %>
-              <%= link_to pretty_chamber_path(chamber.name), :class => :thumbnail do %>
-                <%= image_tag chamber.photo_medium, :size => "180x180" %> 
+              <%= link_to chamber_path(chamber.name), :class => :thumbnail do %>
+                <%= image_tag chamber.photo_medium, :size => "170x170" %> 
+                <center><p>&nbsp;</p></center>
               <% end %>
             <% end %>
           </li>
         <% end %>
       </ul>
+      <h5>O ingrese por legislador</h5>
+      <ul class="thumbnails">
+        <li class="span4" style="height: 180px">       
+          <%= link_to people_path, :class => :thumbnail do %>
+            <%= image_tag "people.png", :size => "180x180" %> 
+            <center><p>&nbsp;</p></center>
+          <% end %>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
+

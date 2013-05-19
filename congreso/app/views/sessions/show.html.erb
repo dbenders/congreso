@@ -6,6 +6,9 @@
   <li>
     <%= link_to(@session.chamber.name, @session.chamber) %>
   </li>
+  <li>
+    <%= link_to("Período #{@session.period}", @session.chamber) %>
+  </li>
   <li class="active">
     <%= link_to(@session.name, @session) %>
   </li>
@@ -29,7 +32,7 @@
                 <li><span class="label label-important"><%= tbk.text %></span></li>
               <% elsif tbk.person and tbk.bookmark and tbk.bookmark.matchtyp == 'manual' %>
                 <li id="<%= tbk.bookmark.pos %>">
-                  <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.bookmark.pos %>,'<%= session_text_bookmark_transcript_path(@session,tbk) %>','<%= person_card_path(tbk.person) %>')">
+                  <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.bookmark.pos %>,'<%= session_text_bookmark_transcript_path(@session.chamber.name,@session.period,@session.meeting,tbk) %>','<%= person_card_path(tbk.person) %>')">
                   <table>
                     <tr>
                       <td rowspan='2'>
@@ -42,6 +45,17 @@
                     <tr>
                       <td>
                         <small><%= tbk.person.party.name %></small>      
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td>
+                        <% if tbk.tags && tbk.tags.include?('interruption') %>
+                          <span class="label">interrupción</span>
+                        <% end %>                                                
+                        <% if tbk.tags && tbk.tags.include?('argument') %>
+                          <span class="label">discusión</span>
+                        <% end %>
                       </td>
                     </tr>
                   </table>

@@ -1,0 +1,39 @@
+<% content_for :head do -%>
+  <style>
+    .manual {
+      background-color: #B9FBD5;
+    }
+    .section {
+      background-color: #b94a48;
+      font-weight: bold;
+    }
+  </style>
+<% end %>
+
+<h1>Transcript</h1>
+
+<table>
+  <tr>
+    <th>Person</th>
+    <th>Text</th>
+    <th></th>
+    <th>Tags</th>    
+  </tr>
+
+<% @text_bookmarks.each do |text_bookmark| %>
+  <tr class="<%= text_bookmark.bookmark ? text_bookmark.bookmark.matchtyp : ''%>">
+    <td valign='top'><%= text_bookmark.person %></td>
+    <td valign='top' class="<%= text_bookmark.typ %>"><%= text_bookmark.text %></td>
+    <td valign='top'>
+      <%= link_to 'Edit', edit_admin_session_text_bookmark_path(@sesion,text_bookmark) %>
+      <%= link_to 'Destroy', admin_session_text_bookmark_path(@sesion,text_bookmark), method: :delete, data: { confirm: 'Are you sure?' } %>
+      <%= link_to 'Merge', admin_session_text_bookmark_merge_up_path(@sesion,text_bookmark) %>
+    </td>
+    <td valign='top'><%= text_bookmark.tags %></td>      
+  </tr>
+<% end %>
+</table>
+
+<br />
+<%= link_to 'Rebuild', rebuild_admin_session_text_bookmarks_path(@sesion) %>
+<%= link_to 'Retag', retag_admin_session_text_bookmarks_path(@sesion) %>

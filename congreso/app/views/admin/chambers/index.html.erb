@@ -1,0 +1,22 @@
+<h1>
+  Cámaras
+  <%= link_to "Nueva",new_admin_chamber_path, :class => :btn %>
+</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Name</th>      
+      <th>Long name</th>
+  </thead>
+  <tbody>
+    <% @chambers.each do |chamber| %>
+      <tr>
+        <td><%= image_tag chamber.photo_medium || chamber.photo_small, :width => 40 %></td>
+        <td><%= link_to chamber.name, edit_admin_chamber_path(chamber) %></td>
+        <td><%= chamber.long_name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

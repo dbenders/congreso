@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509185550) do
+ActiveRecord::Schema.define(:version => 20130517210710) do
 
   create_table "bookmark_sets", :force => true do |t|
     t.string   "typ"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20130509185550) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.boolean  "disabled"
+    t.string   "long_name"
   end
 
   create_table "parties", :force => true do |t|
@@ -76,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20130509185550) do
     t.integer  "party_id"
     t.integer  "province_id"
     t.integer  "chamber_id"
+    t.string   "username"
   end
 
   create_table "provinces", :force => true do |t|
@@ -109,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20130509185550) do
     t.string   "typ"
     t.string   "title"
     t.integer  "bookmark_id"
+    t.string   "tags"
   end
 
   create_table "video_bookmarks", :force => true do |t|

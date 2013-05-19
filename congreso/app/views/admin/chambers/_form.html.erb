@@ -1,4 +1,4 @@
-<%= form_for(@chamber) do |f| %>
+<%= form_for([:admin, @chamber]) do |f| %>
   <% if @chamber.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@chamber.errors.count, "error") %> prohibited this chamber from being saved:</h2>
@@ -15,6 +15,10 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  <div class="field">
+    <%= f.label :long_name %><br />
+    <%= f.text_field :long_name %>
+  </div>  
   <div class="field">
     <%= f.label :photo_medium %><br />
     <%= f.text_field :photo_medium %>

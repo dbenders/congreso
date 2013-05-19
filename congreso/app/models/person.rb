@@ -1,5 +1,5 @@
 class Person < ActiveRecord::Base
-  attr_accessible :facebook, :firstname, :lastname, :photo_medium, :photo_small, :twitter, :website, :wikipedia
+  attr_accessible :username, :facebook, :firstname, :lastname, :photo_medium, :photo_small, :twitter, :website, :wikipedia
   belongs_to :province
   belongs_to :party
   belongs_to :chamber
@@ -8,6 +8,10 @@ class Person < ActiveRecord::Base
 
   def fullname
   	"#{lastname}, #{firstname}"
+  end
+
+  def to_param
+    username || "#{lastname.downcase}_#{firstname.downcase}"
   end
 
   def to_s

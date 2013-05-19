@@ -1,0 +1,31 @@
+<h1>
+  Sesiones
+  <%= link_to "Nueva",new_admin_session_path, :class => :btn %>
+</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Chamber</th>
+      <th>Name</th>      
+      <th>Period</th>
+      <th>Meeting</th>
+      <th>Date</th>
+      <th></th>
+  </thead>
+  <tbody>
+    <% @sessions.each do |session| %>
+      <tr>
+        <td><%= link_to session.chamber.name, admin_chamber_path(session.chamber) %></td>
+        <td><%= link_to session.name, edit_admin_session_path(session) %></td>        
+        <td><%= session.period %></td>
+        <td><%= session.meeting %></td>
+        <td><%= session.date %></td>
+        <td>
+          <%= link_to "bookmarks", admin_session_bookmarks_path(session), :class => :btn %>
+          <%= link_to "transcript", admin_session_text_bookmarks_path(session), :class => :btn %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

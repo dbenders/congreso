@@ -27,10 +27,10 @@
 <% @bookmarks.each do |bookmark| %>
   <tr id='<%= "bookmark_#{bookmark.id}" %>'>
     <td class='pos'>
-      <%= link_to bookmark.pos, "javascript:seek(#{bookmark.id},#{bookmark.pos},'#{(bookmark.text_bookmark)? session_text_bookmark_transcript_path(@session,bookmark.text_bookmark) : nil}')" %>
+      <%= link_to bookmark.pos, "javascript:seek(#{bookmark.id},#{bookmark.pos},'#{(bookmark.text_bookmark)? admin_session_text_bookmark_transcript_path(@session,bookmark.text_bookmark) : nil}')" %>
     </td>    
     <td class='speaker'>
-        <%= link_to("javascript:toggle(#{bookmark.id},'#{session_bookmark_toggle_matchtyp_path(bookmark.session,bookmark, :format => :text)}')", :class => [bookmark.matchtyp,'person']) do %>
+        <%= link_to("javascript:toggle(#{bookmark.id},'#{admin_session_bookmark_toggle_matchtyp_path(bookmark.session,bookmark, :format => :text)}')", :class => [bookmark.matchtyp,'person']) do %>
             <% if bookmark.text_bookmark and bookmark.text_bookmark.person %>
               <%= bookmark.text_bookmark.person %>
             <% else %>
@@ -39,16 +39,16 @@
         <% end %>
         <span class="arrows">        
           <% if bookmark.text_bookmark and bookmark.text_bookmark.person %>
-              <%= link_to("javascript:moveSpeaker('#{session_text_bookmark_up_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
+              <%= link_to("javascript:moveSpeaker('#{admin_session_text_bookmark_up_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
                 <i class="icon-arrow-up"></i>
               <% end %>
-              <%= link_to("javascript:moveSpeaker('#{session_text_bookmark_down_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
+              <%= link_to("javascript:moveSpeaker('#{admin_session_text_bookmark_down_path(bookmark.session,bookmark.text_bookmark, :format => :json)}')") do %>
                 <i class="icon-arrow-down"></i>
               <% end %>
           <% end %>
         </span>
     </td>
-    <td><%= link_to 'Edit', edit_session_bookmark_path(@session,bookmark) %></td>
+    <td><%= link_to 'Edit', edit_admin_session_bookmark_path(@session,bookmark) %></td>
   </tr>
 <% end %>
 </table>

@@ -1,40 +1,116 @@
+<% content_for :head do -%>
+  <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js" %>
+<% end %>
+
+<% content_for :nav do -%>
+  <li>
+    <%= link_to "legisladores", people_path %>
+  </li>
+  <li class="active">
+    <%= link_to(@person) %>
+  </li>
+<% end %>
+
+
 <div class="well well-round">
-<% if @person.party.website %>  
-  <%= link_to @person.party.website do %>
+  <% if @person.party.website %>  
+    <%= link_to @person.party.website do %>
+      <div class="alert alert-success">
+        <%= @person.party.name %>
+      </div>
+    <% end %>
+  <% else %>
     <div class="alert alert-success">
       <%= @person.party.name %>
     </div>
   <% end %>
-<% else %>
-  <div class="alert alert-success">
-    <%= @person.party.name %>
+  <div>
+    <span>
+      <%= image_tag @person.photo_medium %>
+    </span>
+    <h5><%= "#{@person.firstname} #{@person.lastname}" %></h5>
+    <div>
+      <%= image_tag "http://cdn1.iconfinder.com/data/icons/yooicons_set01_socialbookmarks/512/social_twitter_box_blue.png", :width => 25 %>
+      <%= image_tag "http://cdn.androidpolice.com/wp-content/uploads/2013/04/nexusae0_facebook1.png", :width => 25 %>
+      <%= image_tag "http://www.itsecurityzone.com/wp-content/uploads/2012/05/Email-icon-square.png", :width => 35 %>
+    </div>
   </div>
-<% end %>
-
-
-<div>
-  <span>
-  <%= image_tag @person.photo_medium %>
-</span>
-<h5><%= "#{@person.firstname} #{@person.lastname}" %></h5>
-<div>
-<%= image_tag "http://cdn1.iconfinder.com/data/icons/yooicons_set01_socialbookmarks/512/social_twitter_box_blue.png", :width => 25 %>
-<%= image_tag "http://cdn.androidpolice.com/wp-content/uploads/2013/04/nexusae0_facebook1.png", :width => 25 %>
-<%= image_tag "http://www.itsecurityzone.com/wp-content/uploads/2012/05/Email-icon-square.png", :width => 35 %>
 </div>
 
-</div>
+<script>
+  var playlist = [];
+</script>
 
-<div>
-  <h5>Discursos</h5>
-  <ul>
-    <% @person.text_bookmarks.each do |tbk| %>
-      <% if tbk.session and tbk.bookmark %>
-        <li>        
-          <%= link_to tbk.session.name, session_path(tbk.session, :tbk => tbk) %>
-        </li>
+<div class="row">
+  <div class="span4">
+    <div id="vid">
+    </div>
+  </div>
+  <div class="offset4 span4">
+    <ul class="nav" style="height: 480px; overflow-y:scroll">
+      <% videos = [] %>
+      <% @person.text_bookmarks.each do |tbk| %>            
+        <% if tbk.session and tbk.bookmark and tbk.bookmark.matchtyp == 'manual' %>
+          <% if !videos.include?(tbk.session.video_url) %>
+            <li><span class="label label-important"><%= tbk.session.date.strftime('%d/%m/%Y') %></span></li>
+            <% videos << tbk.session.video_url %>
+          <% end %>
+          <li id="<%= tbk.bookmark.pos %>">
+
+            <a class="thumbnail" style="text-decoration:none" href="javascript:seek(<%= tbk.bookmark.pos %>,'<%= session_text_bookmark_transcript_path(tbk.session.chamber.name,tbk.session.period,tbk.session.meeting,tbk) %>',<%= videos.length-1 %>)">
+              <table>
+                <tr>
+                  <td rowspan='2'>
+                    <img src="<%= @person.photo_small %>" class="img-polaroid"/>
+                  </td>
+                  <td>
+                    <b><%= tbk.section %></b>
+                  </td>
+                </tr>                      
+              </table>
+            </a> 
+          </li>
+        <% end %>
       <% end %>
-    <% end %>
-  </ul>
+    </ul>
+  </div>
 </div>
+
+<div id="info" style="display:none">
+  <div class="span11 well">
+    <p id="text"></p>
+    <button class="btn" disabled>Descargar video</button>
+    <button class="btn" disabled>Descargar .doc</button>
+    <button class="btn" disabled><%= image_tag "http://www.ecreativeim.com/blog/wp-content/uploads/2011/05/facebook-like-icon.png", :width => 25 %></button>
+  </div>
+</div>
+
+
+<script src="http://www.hcdn.gov.ar/system/modules/ar.gov.hcdn/resources/jwplayer-premium/jwplayer.js"></script>
+<script> jwplayer.key="f449YUYx6rSnWyS5eFa0f8/2NI60KlVjkkGFjKZ6154="</script>
+
+<script>
+
+  var playlist = [
+    <%= videos.collect {|v| "{file: '#{v}'}" }.join(',').html_safe %>
+  ];
+
+  jwplayer('vid').setup({
+      playlist:  playlist,
+      width: '600',
+      height: '480'
+  });
+
+  var curr_video_index = null;
+  function seek(pos,transcript_url,video_index) {
+    if(curr_video_index != video_index) {
+      jwplayer('vid').playlistItem(video_index);
+    }
+    jwplayer('vid').seek(pos);
+    $("#info").show();
+    $.get(transcript_url, function(resp) {
+      $("#text").html(resp);
+    });
+  }
+</script>
 

@@ -1,6 +1,6 @@
 <legend>
   Editing session
-  <%= link_to 'Destroy', @session, method: :delete, data: { confirm: 'Are you sure?' }, :class => [:btn, "btn-danger"] %>
+  <%= link_to 'Destroy', [:admin,@session], method: :delete, data: { confirm: 'Are you sure?' }, :class => [:btn, "btn-danger"] %>
 </legend>
 
 <%= render 'form' %>

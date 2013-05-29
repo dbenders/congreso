@@ -85,7 +85,8 @@
   <script>
  
     jwplayer('vid').setup({
-        file: '<%= @session.video_url %>',
+        playlist: [{file: '<%= @session.video_url %>',duration:100}],
+        //file: '<%= @session.video_url %>',
         width: '600',
         height: '480'
     });

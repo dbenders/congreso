@@ -1,4 +1,4 @@
-<%= form_for([@session || @text_bookmark.session,@text_bookmark]) do |f| %>
+<%= form_for([:admin, @text_bookmark.session,@text_bookmark]) do |f| %>
   <% if @text_bookmark.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@text_bookmark.errors.count, "error") %> prohibited this text_bookmark from being saved:</h2>

@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130517210710) do
+ActiveRecord::Schema.define(:version => 20130610135735) do
+
+  create_table "bills", :force => true do |t|
+    t.string   "expediente"
+    t.string   "orden"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "bookmark_sets", :force => true do |t|
     t.string   "typ"
@@ -78,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20130517210710) do
     t.integer  "province_id"
     t.integer  "chamber_id"
     t.string   "username"
+    t.integer  "num_speeches"
   end
 
   create_table "provinces", :force => true do |t|
@@ -119,6 +127,14 @@ ActiveRecord::Schema.define(:version => 20130517210710) do
     t.integer  "pos"
     t.integer  "session_id"
     t.integer  "person_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "votes", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "bill_id"
+    t.string   "vote"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

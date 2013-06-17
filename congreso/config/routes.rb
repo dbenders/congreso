@@ -1,8 +1,15 @@
 Congreso::Application.routes.draw do
 
+  resources :votes
+
+  resources :bills
+
   namespace :admin do
     resources :chambers
     resources :parties
+    resources :people do
+      get 'update_data', :on => :collection
+    end
     resources :sessions do
       resources :text_bookmarks do
         get 'rebuild', :on => :collection

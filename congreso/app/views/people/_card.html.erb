@@ -14,7 +14,7 @@
       <%= "#{person.lastname.truncate(13)}" %>
     </h5>
     <div>
-      <% n = person.text_bookmarks.select {|tbk|tbk.bookmark && tbk.bookmark.matchtyp == 'manual'}.length %>
+      <% n = person.num_speeches %>
       <% if n == 0 %>
         <span class="badge">
           sin discursos

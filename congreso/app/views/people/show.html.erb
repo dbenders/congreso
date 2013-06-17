@@ -101,12 +101,23 @@
       height: '480'
   });
 
+  var seek_to = null;
+  jwplayer('vid').onPlay(function() {
+    if(seek_to != null) {
+      jwplayer('vid').seek(seek_to);
+      seek_to = null;
+    }
+  });
+
   var curr_video_index = null;
   function seek(pos,transcript_url,video_index) {
+    var player = jwplayer('vid');
     if(curr_video_index != video_index) {
-      jwplayer('vid').playlistItem(video_index);
+      seek_to = pos;
+      player.playlistItem(video_index);
+    } else {
+      player.seek(pos);
     }
-    jwplayer('vid').seek(pos);
     $("#info").show();
     $.get(transcript_url, function(resp) {
       $("#text").html(resp);

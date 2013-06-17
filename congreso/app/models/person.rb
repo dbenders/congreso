@@ -1,10 +1,11 @@
 class Person < ActiveRecord::Base
   attr_accessible :username, :facebook, :firstname, :lastname, :photo_medium, :photo_small, :twitter, :website, :wikipedia
+  attr_accessible :num_speeches
+
   belongs_to :province
   belongs_to :party
   belongs_to :chamber
   has_many :text_bookmarks
-
 
   def fullname
   	"#{lastname}, #{firstname}"

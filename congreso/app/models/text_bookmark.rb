@@ -8,7 +8,7 @@ class TextBookmark < ActiveRecord::Base
   	#if !title.nil?
   	#	title
   	#elsif session
-  		session.transcript[pos..pos+length]
+  		session.transcript[(pos||0)..(pos||0)+(length||0)]
     #else 
     #  nil
   	#end

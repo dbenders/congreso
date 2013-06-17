@@ -111,6 +111,7 @@ class Admin::TextBookmarksController < ApplicationController
   def new
     @session = Session.find(params[:session_id])
     @text_bookmark = TextBookmark.new
+    @text_bookmark.session = @session
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @text_bookmark }
@@ -125,12 +126,18 @@ class Admin::TextBookmarksController < ApplicationController
   # POST /text_bookmarks
   # POST /text_bookmarks.json
   def create
-    @session = Session.find(params[:session_id])
-    @text_bookmark = TextBookmark.new(params[:text_bookmark])
+    @text_bookmark = TextBookmark.new(params[:text_bookmark].except(:person_id))
+    if not params[:text_bookmark][:person_id].empty?
+      @text_bookmark.person = Person.find(params[:text_bookmark][:person_id]) 
+    else
+      @text_bookmark.person = nil
+    end    
+    @session = Session.find(params[:session_id])    
     @text_bookmark.session = @session
     respond_to do |format|
       if @text_bookmark.save
-        format.html { redirect_to session_text_bookmarks_path(@session), notice: 'Text bookmark was successfully created.' }
+        format.html { render action: "edit" }
+        #format.html { redirect_to admin_session_text_bookmarks_path(@session), notice: 'Text bookmark was successfully created.' }
         format.json { render json: @text_bookmark, status: :created, location: @text_bookmark }
       else
         format.html { render action: "new" }
@@ -167,7 +174,7 @@ class Admin::TextBookmarksController < ApplicationController
     @text_bookmark.destroy
 
     respond_to do |format|
-      format.html { redirect_to text_bookmarks_url }
+      format.html { redirect_to admin_session_text_bookmarks_path(@text_bookmark.session) }
       format.json { head :no_content }
     end
   end
